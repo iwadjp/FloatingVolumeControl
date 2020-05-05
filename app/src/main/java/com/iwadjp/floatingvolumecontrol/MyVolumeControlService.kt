@@ -1,8 +1,15 @@
 package com.iwadjp.floatingvolumecontrol
 
 import android.app.IntentService
+import android.app.Notification
+import android.app.PendingIntent
+import android.app.Service
 import android.content.Intent
 import android.content.Context
+import android.os.IBinder
+import android.view.WindowManager
+import android.widget.ImageView
+import kotlin.random.Random
 
 // TODO: Rename actions, choose action names that describe tasks that this
 // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
@@ -20,6 +27,59 @@ private const val EXTRA_PARAM2 = "com.iwadjp.floatingvolumecontrol.extra.PARAM2"
  * helper methods.
  */
 class MyVolumeControlService : IntentService("MyVolumeControlService") {
+
+    private val notificationID = Random.nextInt()
+
+    private var button: FloatingButton? = null
+
+    override fun onCreate() {
+        super.onCreate()
+        startNotification()
+    }
+
+    private fun startNotification() {
+        val activityIntent = Intent(this, MainActivity::class.java)
+        val pendingIntent = PendingIntent.getActivity(this, 0, activityIntent, 0)
+        val notification = Notification.Builder(this)
+            .setContentIntent(pendingIntent)
+            .setSmallIcon(R.mipmap.ic_launcher)
+            .setContentTitle("Service is running.")
+            .build()
+        startForeground(notificationID, notification)
+    }
+
+    override fun onBind(intent: Intent?): IBinder? = null
+
+    override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
+        if (intent == null || intent.action == ACTION_START) {
+            startOverlay()
+        } else {
+            stopSelf()
+        }
+        return Service.START_STICKY
+    }
+
+    private fun startOverlay() {
+        ImageView(this).run {
+            val windowManager = getSystemService(Service.WINDOW_SERVICE) as WindowManager
+            setImageResource(android.R.drawable.ic_menu_add)
+            button = FloatingButton(windowManager, this).apply {
+                visible = true
+            }
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopOverlay()
+    }
+
+    private fun stopOverlay() {
+        button?.run {
+            visible = false
+        }
+        button = null
+    }
 
     override fun onHandleIntent(intent: Intent?) {
         when (intent?.action) {
@@ -53,6 +113,9 @@ class MyVolumeControlService : IntentService("MyVolumeControlService") {
     }
 
     companion object {
+        val ACTION_START = "start"
+        val ACTION_STOP = "stop"
+
         /**
          * Starts this service to perform action Foo with the given parameters. If
          * the service is already performing a task this action will be queued.
