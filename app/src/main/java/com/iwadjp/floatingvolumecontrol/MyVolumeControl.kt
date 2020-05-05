@@ -35,12 +35,16 @@ class MyVolumeControl (context: Context) {
         val point: Point = Point()
         ds.getSize(point)
         pitch = point.x / (maxVol - minVol)
+
+        Log.d(TAG, "initVol=%d, cVol=%d, minVol=%d, maxVol=%d, screen.x=%d, y=%d, pitch=%d"
+            .format(initVol, cVol, minVol, maxVol, point.x, point.y, pitch))
     }
 
     fun setVolume(vol: Int) {
-        val nVol = vol % pitch
-        Log.d(TAG, nVol.toString())
+        val nVol = vol / pitch
+        Log.d(TAG, "cVol=%d, nVol=%d, vol=%d".format(cVol, nVol, vol))
         if (nVol != cVol && nVol >= minVol && nVol <= maxVol) {
+            Log.d(TAG, "setStreamVolume %d".format(nVol))
             am.setStreamVolume(AudioManager.STREAM_MUSIC, nVol, AudioManager.FLAG_SHOW_UI)
             cVol = nVol
         }
