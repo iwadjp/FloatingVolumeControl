@@ -6,9 +6,11 @@ import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
 import android.content.Context
+import android.os.Build
 import android.os.IBinder
 import android.view.WindowManager
 import android.widget.ImageView
+import androidx.annotation.RequiresApi
 import kotlin.random.Random
 
 // TODO: Rename actions, choose action names that describe tasks that this
@@ -32,15 +34,17 @@ class MyVolumeControlService : IntentService("MyVolumeControlService") {
 
     private var button: FloatingButton? = null
 
+    @RequiresApi(Build.VERSION_CODES.O)
     override fun onCreate() {
         super.onCreate()
         startNotification()
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
     private fun startNotification() {
         val activityIntent = Intent(this, MainActivity::class.java)
         val pendingIntent = PendingIntent.getActivity(this, 0, activityIntent, 0)
-        val notification = Notification.Builder(this)
+        val notification = Notification.Builder(this, MainActivity.CHANNEL_ID)
             .setContentIntent(pendingIntent)
             .setSmallIcon(R.mipmap.ic_launcher)
             .setContentTitle("Service is running.")
