@@ -29,22 +29,25 @@ class MainActivity : AppCompatActivity() {
         super.onStart()
         if (hasOverlayPermission()) {
             val intent = Intent(this, MyVolumeControlService::class.java)
-                .setAction(MyVolumeControlService.ACTION_STOP)  // TODO: STOP と STARTは合っている？
+                .setAction(MyVolumeControlService.ACTION_STOP)  // 自分が動いていない時に動かす
             startService(intent)
         } else {
             requestOverlayPermission(REQUEST_OVERLAY_PERMISSION)
         }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {   // ToDo: 二重登録をやめる必要がある？
-            // Create the NotificationChannel
-            val name = getString(R.string.channel_name)
-            val descriptionText = getString(R.string.channel_description)
-            val importance = NotificationManager.IMPORTANCE_DEFAULT
-            val mChannel = NotificationChannel(CHANNEL_ID, name, importance)
-            mChannel.description = descriptionText
-            // Register the channel with the system; you can't change the importance
-            // or other notification behaviors after this
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
-            notificationManager.createNotificationChannel(mChannel)
+            val nc = notificationManager.getNotificationChannel(CHANNEL_ID)
+            if (nc == null) {
+                // Create the NotificationChannel
+                val name = getString(R.string.channel_name)
+                val descriptionText = getString(R.string.channel_description)
+                val importance = NotificationManager.IMPORTANCE_DEFAULT
+                val mChannel = NotificationChannel(CHANNEL_ID, name, importance)
+                mChannel.description = descriptionText
+                // Register the channel with the system; you can't change the importance
+                // or other notification behaviors after this
+                notificationManager.createNotificationChannel(mChannel)
+            }
         }
     }
 
