@@ -67,7 +67,7 @@ class MyVolumeControlService : IntentService("MyVolumeControlService") {
         ImageView(this).run {
             val windowManager = getSystemService(Service.WINDOW_SERVICE) as WindowManager
             setImageResource(android.R.drawable.ic_menu_add)
-            button = FloatingButton(windowManager, this).apply {
+            button = FloatingButton(windowManager, this, context).apply {
                 visible = true
             }
         }

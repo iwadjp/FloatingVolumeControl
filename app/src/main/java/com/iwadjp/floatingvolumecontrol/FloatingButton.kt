@@ -1,17 +1,23 @@
 package com.iwadjp.floatingvolumecontrol
 
+import android.content.Context
 import android.graphics.PixelFormat
 import android.icu.text.Transliterator
+import android.os.Build
 import android.util.Log
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
 import android.view.WindowManager
+import androidx.annotation.RequiresApi
 
-class FloatingButton(val windowManager: WindowManager, val view: View) {
+@RequiresApi(Build.VERSION_CODES.P)
+class FloatingButton(val windowManager: WindowManager, val view: View, context: Context) {
     companion object {
         private val TAG = FloatingButton::class.qualifiedName
     }
+    @RequiresApi(Build.VERSION_CODES.P)
+    private lateinit var myVC: MyVolumeControl
 
     private val params = WindowManager.LayoutParams(
         WindowManager.LayoutParams.WRAP_CONTENT,
@@ -45,15 +51,18 @@ class FloatingButton(val windowManager: WindowManager, val view: View) {
             when (e.action) {
                 MotionEvent.ACTION_DOWN -> {
                     initial = params.position - e.position
+                    myVC = MyVolumeControl(context)
                 }
                 MotionEvent.ACTION_MOVE -> {
                     initial?.let {
                         params.position = it + e.position
                         windowManager.updateViewLayout(view, params)
+                        myVC.setVolume(params.position.x)
                     }
                 }
                 MotionEvent.ACTION_UP -> {
                     initial = null
+                    // ToDo: myVC を nullにしたいけどできなし
                 }
             }
             false
