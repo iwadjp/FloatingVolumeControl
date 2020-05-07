@@ -2,7 +2,6 @@ package com.iwadjp.floatingvolumecontrol
 
 import android.content.Context
 import android.graphics.PixelFormat
-import android.icu.text.Transliterator
 import android.os.Build
 import android.util.Log
 import android.view.Gravity
@@ -16,9 +15,6 @@ class FloatingButton(val windowManager: WindowManager, val view: View, context: 
     companion object {
         private val TAG = FloatingButton::class.qualifiedName
     }
-    @RequiresApi(Build.VERSION_CODES.P)
-    private lateinit var myVC: MyVolumeControl
-
     private val params = WindowManager.LayoutParams(
         WindowManager.LayoutParams.WRAP_CONTENT,
         WindowManager.LayoutParams.WRAP_CONTENT,
@@ -27,7 +23,7 @@ class FloatingButton(val windowManager: WindowManager, val view: View, context: 
         PixelFormat.TRANSLUCENT)
         .apply {
             gravity = Gravity.TOP or Gravity.START
-            x = 100
+            x = 100     // ToDo: 初期位置をボリュームと合わせる？　使い勝手が悪くなるかも
             y = 100
         }
 
@@ -44,25 +40,30 @@ class FloatingButton(val windowManager: WindowManager, val view: View, context: 
         }
 
     private var initial: Position? = null
+    private var myVC: MyVolumeControl? = null
 
     init {
         view.setOnTouchListener {
                 view, e ->
             when (e.action) {
                 MotionEvent.ACTION_DOWN -> {
+                    Log.d(TAG, "params=${params.position}, e=${e.position}")
                     initial = params.position - e.position
+                    Log.d(TAG, "initial=$initial")
                     myVC = MyVolumeControl(context)
                 }
                 MotionEvent.ACTION_MOVE -> {
                     initial?.let {
+                        Log.d(TAG, "it=${it}, e=${e.position}")
                         params.position = it + e.position
+                        Log.d(TAG, "params=${params.position}")
                         windowManager.updateViewLayout(view, params)
-                        myVC.setVolume(params.position.x)
+                        myVC?.setVolume(params.position.x)
                     }
                 }
                 MotionEvent.ACTION_UP -> {
                     initial = null
-                    // ToDo: myVC を nullにしたいけどできなし
+                    myVC = null
                 }
             }
             false
@@ -91,6 +92,15 @@ class FloatingButton(val windowManager: WindowManager, val view: View, context: 
 
         operator fun plus(p: Position) = Position(fx + p.fx, fy + p.fy)
         operator fun minus(p: Position) = Position(fx - p.fx, fy - p.fy)
+    }
+
+    fun setPosition(context: Context) {
+        myVC = MyVolumeControl(context)
+        myVC?.let {
+            val fx = myVC!!.getPosition()
+            val position = Position(fx, 100.toFloat())    // ハードコードNG
+           params.position = position
+        }
     }
 }
 

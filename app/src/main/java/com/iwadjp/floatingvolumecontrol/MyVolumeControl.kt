@@ -49,4 +49,8 @@ class MyVolumeControl (context: Context) {
             cVol = nVol
         }
     }
+
+    fun getPosition() : Float {
+        return (cVol * pitch).toFloat()
+    }
 }
