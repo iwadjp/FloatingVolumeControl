@@ -3,4 +3,5 @@
     <string name="channel_name">Floating Volume Control Channel</string>
     <string name="channel_description">Floating Volume Control Channel Description</string>
     <string name="notification_title">Service is running.</string>
+    <string name="config_message">When you close this screen,\nyou will see the floating icon</string>
 </resources>
