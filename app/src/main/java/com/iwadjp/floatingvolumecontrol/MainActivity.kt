@@ -8,7 +8,6 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.MotionEvent
 import androidx.annotation.RequiresApi
 
 class MainActivity : AppCompatActivity() {
@@ -18,8 +17,6 @@ class MainActivity : AppCompatActivity() {
         private val REQUEST_OVERLAY_PERMISSION = 1
         val CHANNEL_ID = "FloatingVolumeControl"
     }
-
-    private var enable = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,7 +56,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onStop() {
         super.onStop()
-        if (enable && hasOverlayPermission()) {
+        if (hasOverlayPermission()) {
             val intent = Intent(this, MyVolumeControlService::class.java)
                 .setAction(MyVolumeControlService.ACTION_START)
             startService(intent)
@@ -74,10 +71,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-    override fun onTouchEvent(event: MotionEvent?): Boolean {
-        enable = false
-        return super.onTouchEvent(event)
-    }
-
 }
