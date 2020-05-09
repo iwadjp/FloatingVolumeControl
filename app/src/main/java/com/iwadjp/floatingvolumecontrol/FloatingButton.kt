@@ -98,7 +98,7 @@ class FloatingButton(val windowManager: WindowManager, val view: View, context: 
         myVC = MyVolumeControl(context)
         myVC?.let {
             val fx = myVC!!.getPosition()
-            val position = Position(fx, 100.toFloat())    // ハードコードNG
+            val position = Position(fx, 100.toFloat())    // ToDo: ハードコードNG
            params.position = position
         }
     }
