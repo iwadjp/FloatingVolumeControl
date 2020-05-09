@@ -14,11 +14,12 @@
         android:theme="@style/AppTheme">
         <service
             android:name=".MyVolumeControlService"
-            android:exported="false"></service>
+            android:exported="false" >
+        </service>
 
         <activity android:name=".MainActivity"
             android:configChanges="orientation|screenSize">
-            <intent-filter>
+            <intent-filter> <!-- ToDo: 非推奨？ -->
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

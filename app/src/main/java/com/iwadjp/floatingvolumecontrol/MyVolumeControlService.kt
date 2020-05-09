@@ -5,8 +5,10 @@ import android.app.Notification
 import android.app.PendingIntent
 import android.app.Service
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Build
 import android.os.IBinder
+import android.util.Log
 import android.view.WindowManager
 import android.widget.ImageView
 import androidx.annotation.RequiresApi
@@ -17,6 +19,11 @@ import kotlin.random.Random
  * a service on a separate handler thread.
  */
 class MyVolumeControlService : IntentService("MyVolumeControlService") {    // Todo: IntentService は非推奨
+    companion object {
+        private val TAG = MainActivity::class.qualifiedName
+        val ACTION_START = "start"
+        val ACTION_STOP = "stop"
+    }
 
     private val notificationID = Random.nextInt()
 
@@ -53,11 +60,12 @@ class MyVolumeControlService : IntentService("MyVolumeControlService") {    // T
 
     @RequiresApi(Build.VERSION_CODES.P)
     private fun startOverlay() {
+        Log.d(TAG, "startOverlay")
         ImageView(this).run {
             val windowManager = getSystemService(Service.WINDOW_SERVICE) as WindowManager
             setImageResource(android.R.drawable.ic_menu_add)
             button = FloatingButton(windowManager, this, context).apply {
-                setPosition(context)    // ToDo: このやり方が適切
+//                setPosition(context)    // ToDo: このやり方が適切
                 visible = true
             }
         }
@@ -69,6 +77,7 @@ class MyVolumeControlService : IntentService("MyVolumeControlService") {    // T
     }
 
     private fun stopOverlay() {
+        Log.d(TAG, "stopOverlay")
         button?.run {
             visible = false
         }
@@ -78,8 +87,10 @@ class MyVolumeControlService : IntentService("MyVolumeControlService") {    // T
     override fun onHandleIntent(intent: Intent?) {
     }
 
-    companion object {
-        val ACTION_START = "start"
-        val ACTION_STOP = "stop"
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        val orientation = newConfig.orientation
+        Log.d(TAG, "onConfigurationChanged orientation=${orientation}")
     }
+
 }

@@ -1,6 +1,7 @@
 package com.iwadjp.floatingvolumecontrol
 
 import android.content.Context
+import android.content.res.Configuration
 import android.graphics.PixelFormat
 import android.os.Build
 import android.util.Log
@@ -54,9 +55,9 @@ class FloatingButton(val windowManager: WindowManager, val view: View, context: 
                 }
                 MotionEvent.ACTION_MOVE -> {
                     initial?.let {
-                        Log.d(TAG, "it=${it}, e=${e.position}")
+//                        Log.d(TAG, "it=${it}, e=${e.position}")
                         params.position = it + e.position
-                        Log.d(TAG, "params=${params.position}")
+//                        Log.d(TAG, "params=${params.position}")
                         windowManager.updateViewLayout(view, params)
                         myVC?.setVolume(params.position.x)
                     }
