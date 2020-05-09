@@ -4,6 +4,7 @@ import android.app.Activity
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Intent
+import android.content.res.Configuration
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -70,5 +71,11 @@ class MainActivity : AppCompatActivity() {
                 REQUEST_OVERLAY_PERMISSION -> Log.d(TAG, "enable overlay permisson")
             }
         }
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+        val orientation = newConfig.orientation
+        Log.d(TAG, "onConfigurationChanged orientation=${orientation}")
     }
 }
