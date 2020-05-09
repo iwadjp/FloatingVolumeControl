@@ -42,15 +42,9 @@ class MyVolumeControl (context: Context) {
 
     fun setVolume(vol: Int) {
         val nVol = vol / pitch
-        Log.d(TAG, "cVol=%d, nVol=%d, vol=%d".format(cVol, nVol, vol))
         if (nVol != cVol && nVol >= minVol && nVol <= maxVol) {
-            Log.d(TAG, "setStreamVolume %d".format(nVol))
             am.setStreamVolume(AudioManager.STREAM_MUSIC, nVol, AudioManager.FLAG_SHOW_UI)
             cVol = nVol
         }
-    }
-
-    fun getPosition() : Float {
-        return (cVol * pitch).toFloat()
     }
 }

@@ -72,10 +72,4 @@ class MainActivity : AppCompatActivity() {
             }
         }
     }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        val orientation = newConfig.orientation
-        Log.d(TAG, "onConfigurationChanged orientation=${orientation}")
-    }
 }

@@ -65,7 +65,6 @@ class MyVolumeControlService : IntentService("MyVolumeControlService") {    // T
             val windowManager = getSystemService(Service.WINDOW_SERVICE) as WindowManager
             setImageResource(android.R.drawable.ic_menu_add)
             button = FloatingButton(windowManager, this, context).apply {
-//                setPosition(context)    // ToDo: このやり方が適切
                 visible = true
             }
         }
@@ -77,20 +76,11 @@ class MyVolumeControlService : IntentService("MyVolumeControlService") {    // T
     }
 
     private fun stopOverlay() {
-        Log.d(TAG, "stopOverlay")
         button?.run {
             visible = false
         }
         button = null
     }
 
-    override fun onHandleIntent(intent: Intent?) {
-    }
-
-    override fun onConfigurationChanged(newConfig: Configuration) {
-        super.onConfigurationChanged(newConfig)
-        val orientation = newConfig.orientation
-        Log.d(TAG, "onConfigurationChanged orientation=${orientation}")
-    }
-
+    override fun onHandleIntent(intent: Intent?) {}
 }

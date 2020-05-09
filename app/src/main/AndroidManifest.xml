@@ -17,9 +17,8 @@
             android:exported="false" >
         </service>
 
-        <activity android:name=".MainActivity"
-            android:configChanges="orientation|screenSize">
-            <intent-filter> <!-- ToDo: 非推奨？ -->
+        <activity android:name=".MainActivity">
+            <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>

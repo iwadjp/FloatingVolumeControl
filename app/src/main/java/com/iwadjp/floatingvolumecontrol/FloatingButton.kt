@@ -24,7 +24,7 @@ class FloatingButton(val windowManager: WindowManager, val view: View, context: 
         PixelFormat.TRANSLUCENT)
         .apply {
             gravity = Gravity.TOP or Gravity.START
-            x = 100     // ToDo: 初期位置をボリュームと合わせる？　使い勝手が悪くなるかも
+            x = 100
             y = 100
         }
 
@@ -48,16 +48,12 @@ class FloatingButton(val windowManager: WindowManager, val view: View, context: 
                 view, e ->
             when (e.action) {
                 MotionEvent.ACTION_DOWN -> {
-                    Log.d(TAG, "params=${params.position}, e=${e.position}")
                     initial = params.position - e.position
-                    Log.d(TAG, "initial=$initial")
                     myVC = MyVolumeControl(context)
                 }
                 MotionEvent.ACTION_MOVE -> {
                     initial?.let {
-//                        Log.d(TAG, "it=${it}, e=${e.position}")
                         params.position = it + e.position
-//                        Log.d(TAG, "params=${params.position}")
                         windowManager.updateViewLayout(view, params)
                         myVC?.setVolume(params.position.x)
                     }
@@ -93,15 +89,6 @@ class FloatingButton(val windowManager: WindowManager, val view: View, context: 
 
         operator fun plus(p: Position) = Position(fx + p.fx, fy + p.fy)
         operator fun minus(p: Position) = Position(fx - p.fx, fy - p.fy)
-    }
-
-    fun setPosition(context: Context) {
-        myVC = MyVolumeControl(context)
-        myVC?.let {
-            val fx = myVC!!.getPosition()
-            val position = Position(fx, 100.toFloat())    // ToDo: ハードコードNG
-           params.position = position
-        }
     }
 }
 
